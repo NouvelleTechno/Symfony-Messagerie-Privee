@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie
+{% endblock %}
+
+{% block body %}
+	<section class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1>Messagerie</h1>
+				<h2>Boîte de réception</h2>
+				<p>Vous avez reçu
+					{{ app.user.received|length }}
+					messages</p>
+			</div>
+			<div class="col-3">De</div>
+			<div class="col-3">Sujet</div>
+			<div class="col-3">Date</div>
+			<div class="col-3">Actions</div>
+			{% for message in app.user.received %}
+				{% set bold = "" %}
+				{% if message.isRead == 0 %}
+					{% set bold = "fw-bold" %}
+				{% endif %}
+
+				<div class="col-3 {{bold}}">{{ message.sender.email }}</div>
+				<div class="col-3 {{bold}}">
+					<a href="{{ path("read", {id: message.id}) }}">{{ message.title }}</a>
+				</div>
+				<div class="col-3 {{bold}}">{{ message.createdAt|date }}</div>
+				<div class="col-3">
+                    <a href="{{ path("delete", {id: message.id}) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-excel-fill text-danger" viewbox="0 0 16 16">
+                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5.884 4.68L8 7.219l2.116-2.54a.5.5 0 1 1 .768.641L8.651 8l2.233 2.68a.5.5 0 0 1-.768.64L8 8.781l-2.116 2.54a.5.5 0 0 1-.768-.641L7.349 8 5.116 5.32a.5.5 0 1 1 .768-.64z"/>
+                        </svg>
+                    </a>
+				</div>
+			{% endfor %}
+
+
+			<div class="col">
+				<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+					Voir mes dossiers
+				</a>
+				<a href="{{path("send")}}" class="btn btn-primary">Envoyer un message</a>
+			</div>
+		</div>
+	</section>
+	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+		<div class="offcanvas-header">
+			<h2 class="offcanvas-title" id="offcanvasExampleLabel">Mes dossiers</h2>
+			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<div class="list-group">
+				<a href="{{ path("messages") }}" class="list-group-item list-group-item-action">Accueil</a>
+			</div>
+			<div class="list-group">
+				<a href="{{ path("received") }}" class="list-group-item list-group-item-action active">Boîte de réception</a>
+			</div>
+			<div class="list-group">
+				<a href="{{ path("messages") }}" class="list-group-item list-group-item-action">Eléments envoyés</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
